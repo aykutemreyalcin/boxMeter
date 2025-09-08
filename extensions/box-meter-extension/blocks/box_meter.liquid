@@ -1,0 +1,112 @@
+<div id="box-meter-{{ block.id }}" class="box-meter" data-block="box-meter" data-boxes='{{ block.settings.boxes_json | escape }}'>
+  {% assign v = product.selected_or_first_available_variant %}
+
+  {% assign p_len = nil %}
+  {% assign p_wid = nil %}
+  {% assign p_hei = nil %}
+  {% assign p_wgt = nil %}
+
+  {%- comment -%} Prefer product or variant metafields based on setting {%- endcomment -%}
+  {% assign prefer_product = block.settings.prefer_product %}
+
+  {% if prefer_product %}
+    {% if product.metafields.packaging.length_mm != blank %}
+      {% assign p_len = product.metafields.packaging.length_mm.value %}
+    {% elsif v.metafields.packaging.length_mm != blank %}
+      {% assign p_len = v.metafields.packaging.length_mm.value %}
+    {% endif %}
+
+    {% if product.metafields.packaging.width_mm != blank %}
+      {% assign p_wid = product.metafields.packaging.width_mm.value %}
+    {% elsif v.metafields.packaging.width_mm != blank %}
+      {% assign p_wid = v.metafields.packaging.width_mm.value %}
+    {% endif %}
+
+    {% if product.metafields.packaging.height_mm != blank %}
+      {% assign p_hei = product.metafields.packaging.height_mm.value %}
+    {% elsif v.metafields.packaging.height_mm != blank %}
+      {% assign p_hei = v.metafields.packaging.height_mm.value %}
+    {% endif %}
+
+    {% if product.metafields.packaging.weight_g != blank %}
+      {% assign p_wgt = product.metafields.packaging.weight_g.value %}
+    {% elsif v.metafields.packaging.weight_g != blank %}
+      {% assign p_wgt = v.metafields.packaging.weight_g.value %}
+    {% endif %}
+  {% else %}
+    {% if v.metafields.packaging.length_mm != blank %}
+      {% assign p_len = v.metafields.packaging.length_mm.value %}
+    {% elsif product.metafields.packaging.length_mm != blank %}
+      {% assign p_len = product.metafields.packaging.length_mm.value %}
+    {% endif %}
+
+    {% if v.metafields.packaging.width_mm != blank %}
+      {% assign p_wid = v.metafields.packaging.width_mm.value %}
+    {% elsif product.metafields.packaging.width_mm != blank %}
+      {% assign p_wid = product.metafields.packaging.width_mm.value %}
+    {% endif %}
+
+    {% if v.metafields.packaging.height_mm != blank %}
+      {% assign p_hei = v.metafields.packaging.height_mm.value %}
+    {% elsif product.metafields.packaging.height_mm != blank %}
+      {% assign p_hei = product.metafields.packaging.height_mm.value %}
+    {% endif %}
+
+    {% if v.metafields.packaging.weight_g != blank %}
+      {% assign p_wgt = v.metafields.packaging.weight_g.value %}
+    {% elsif product.metafields.packaging.weight_g != blank %}
+      {% assign p_wgt = product.metafields.packaging.weight_g.value %}
+    {% endif %}
+  {% endif %}
+
+  <div
+    data-role="bm-data"
+    data-len="{{ p_len | default: 0 }}"
+    data-wid="{{ p_wid | default: 0 }}"
+    data-hei="{{ p_hei | default: 0 }}"
+    data-wgt="{{ p_wgt | default: 0 }}"
+    data-rotate="{{ block.settings.allow_rotation }}">
+  </div>
+
+  <details open>
+    <summary>{{ block.settings.title }}</summary>
+    <div data-role="bm-output"></div>
+  </details>
+</div>
+
+{{ 'box_meter.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'box_meter.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Box Meter",
+  "target": "section",
+  "templates": ["product"],
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Box Meter"
+    },
+    {
+      "type": "textarea",
+      "id": "boxes_json",
+      "label": "Box Definitions (JSON) — supports inner_mm (mm) or inner_in (inches)",
+      "default": "[\n  {\n    \"code\": \"B1\",\n    \"name\": \"Small Box\",\n    \"inner_mm\": { \"L\": 200, \"W\": 150, \"H\": 100 },\n    \"max_weight_g\": 5000\n  },\n  {\n    \"code\": \"B2\",\n    \"name\": \"Medium Box\",\n    \"inner_mm\": { \"L\": 300, \"W\": 200, \"H\": 150 },\n    \"max_weight_g\": 12000\n  },\n  {\n    \"code\": \"B3\",\n    \"name\": \"Large Box\",\n    \"inner_mm\": { \"L\": 400, \"W\": 300, \"H\": 200 },\n    \"max_weight_g\": 20000\n  }\n]"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_rotation",
+      "label": "Place product by rotating inside the box",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "prefer_product",
+      "label": "Prefer product metafields over variant",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
