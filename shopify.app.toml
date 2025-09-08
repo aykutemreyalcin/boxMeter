@@ -2,7 +2,7 @@
 
 client_id = "ee1a11d0a28976615abf6d412c966d4f"
 name = "boxMeter"
-application_url = "https://boxmeter-production.up.railway.app:8080"
+application_url = "https://boxmeter-production.up.railway.app"
 embedded = true
 
 [build]
@@ -25,4 +25,4 @@ api_version = "2025-10"
 scopes = "write_products"
 
 [auth]
-redirect_urls = [ "https://boxmeter-production.up.railway.app:8080/auth/callback" ]
+redirect_urls = [ "https://boxmeter-production.up.railway.app/auth/callback" ]
