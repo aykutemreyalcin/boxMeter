@@ -2,15 +2,23 @@
   Build boxes JSON from structured inputs if any are enabled; otherwise fall back to textarea JSON.
 {%- endcomment -%}
 {% assign boxes_concat = '' %}
-{% for i in (1..6) %}
-  {% assign enabled = block.settings["box" | append: i | append: "_enabled"] %}
+{% for i in (1..3) %}
+  {% assign key_enabled = 'box' | append: i | append: '_enabled' %}
+  {% assign enabled = block.settings[key_enabled] %}
   {% if enabled %}
-    {% assign code = block.settings["box" | append: i | append: "_code"] | default: '' %}
-    {% assign name = block.settings["box" | append: i | append: "_name"] | default: '' %}
-    {% assign L = block.settings["box" | append: i | append: "_L_mm"] | default: 0 %}
-    {% assign W = block.settings["box" | append: i | append: "_W_mm"] | default: 0 %}
-    {% assign H = block.settings["box" | append: i | append: "_H_mm"] | default: 0 %}
-    {% assign MW = block.settings["box" | append: i | append: "_max_weight_g"] | default: 0 %}
+    {% assign key_code = 'box' | append: i | append: '_code' %}
+    {% assign key_name = 'box' | append: i | append: '_name' %}
+    {% assign key_L = 'box' | append: i | append: '_L_mm' %}
+    {% assign key_W = 'box' | append: i | append: '_W_mm' %}
+    {% assign key_H = 'box' | append: i | append: '_H_mm' %}
+    {% assign key_MW = 'box' | append: i | append: '_max_weight_g' %}
+
+    {% assign code = block.settings[key_code] | default: '' %}
+    {% assign name = block.settings[key_name] | default: '' %}
+    {% assign L = block.settings[key_L] | default: 0 %}
+    {% assign W = block.settings[key_W] | default: 0 %}
+    {% assign H = block.settings[key_H] | default: 0 %}
+    {% assign MW = block.settings[key_MW] | default: 0 %}
     {% capture one_box %}{"code":"{{ code }}","name":"{{ name }}","inner_mm":{"L":{{ L }},"W":{{ W }},"H":{{ H }}},"max_weight_g":{{ MW }}}{% endcapture %}
     {% if boxes_concat != '' %}{% assign boxes_concat = boxes_concat | append: ',' %}{% endif %}
     {% assign boxes_concat = boxes_concat | append: one_box %}
@@ -120,50 +128,28 @@
     { "type": "checkbox", "id": "box1_enabled", "label": "Enable Box 1", "default": true },
     { "type": "text", "id": "box1_name", "label": "Box 1 name", "default": "Small Box" },
     { "type": "text", "id": "box1_code", "label": "Box 1 code", "default": "B1" },
-    { "type": "number", "id": "box1_L_mm", "label": "Box 1 inner length (mm)", "default": 200, "min": 0 },
-    { "type": "number", "id": "box1_W_mm", "label": "Box 1 inner width (mm)", "default": 150, "min": 0 },
-    { "type": "number", "id": "box1_H_mm", "label": "Box 1 inner height (mm)", "default": 100, "min": 0 },
-    { "type": "number", "id": "box1_max_weight_g", "label": "Box 1 max weight (g)", "default": 5000, "min": 0 },
+    { "type": "number", "id": "box1_L_mm", "label": "Box 1 inner length (mm)", "default": 200 },
+    { "type": "number", "id": "box1_W_mm", "label": "Box 1 inner width (mm)", "default": 150 },
+    { "type": "number", "id": "box1_H_mm", "label": "Box 1 inner height (mm)", "default": 100 },
+    { "type": "number", "id": "box1_max_weight_g", "label": "Box 1 max weight (g)", "default": 5000 },
 
     { "type": "checkbox", "id": "box2_enabled", "label": "Enable Box 2", "default": true },
     { "type": "text", "id": "box2_name", "label": "Box 2 name", "default": "Medium Box" },
     { "type": "text", "id": "box2_code", "label": "Box 2 code", "default": "B2" },
-    { "type": "number", "id": "box2_L_mm", "label": "Box 2 inner length (mm)", "default": 300, "min": 0 },
-    { "type": "number", "id": "box2_W_mm", "label": "Box 2 inner width (mm)", "default": 200, "min": 0 },
-    { "type": "number", "id": "box2_H_mm", "label": "Box 2 inner height (mm)", "default": 150, "min": 0 },
-    { "type": "number", "id": "box2_max_weight_g", "label": "Box 2 max weight (g)", "default": 12000, "min": 0 },
+    { "type": "number", "id": "box2_L_mm", "label": "Box 2 inner length (mm)", "default": 300 },
+    { "type": "number", "id": "box2_W_mm", "label": "Box 2 inner width (mm)", "default": 200 },
+    { "type": "number", "id": "box2_H_mm", "label": "Box 2 inner height (mm)", "default": 150 },
+    { "type": "number", "id": "box2_max_weight_g", "label": "Box 2 max weight (g)", "default": 12000 },
 
     { "type": "checkbox", "id": "box3_enabled", "label": "Enable Box 3", "default": true },
     { "type": "text", "id": "box3_name", "label": "Box 3 name", "default": "Large Box" },
     { "type": "text", "id": "box3_code", "label": "Box 3 code", "default": "B3" },
-    { "type": "number", "id": "box3_L_mm", "label": "Box 3 inner length (mm)", "default": 400, "min": 0 },
-    { "type": "number", "id": "box3_W_mm", "label": "Box 3 inner width (mm)", "default": 300, "min": 0 },
-    { "type": "number", "id": "box3_H_mm", "label": "Box 3 inner height (mm)", "default": 200, "min": 0 },
-    { "type": "number", "id": "box3_max_weight_g", "label": "Box 3 max weight (g)", "default": 20000, "min": 0 },
+    { "type": "number", "id": "box3_L_mm", "label": "Box 3 inner length (mm)", "default": 400 },
+    { "type": "number", "id": "box3_W_mm", "label": "Box 3 inner width (mm)", "default": 300 },
+    { "type": "number", "id": "box3_H_mm", "label": "Box 3 inner height (mm)", "default": 200 },
+    { "type": "number", "id": "box3_max_weight_g", "label": "Box 3 max weight (g)", "default": 20000 },
 
-    { "type": "checkbox", "id": "box4_enabled", "label": "Enable Box 4", "default": false },
-    { "type": "text", "id": "box4_name", "label": "Box 4 name", "default": "" },
-    { "type": "text", "id": "box4_code", "label": "Box 4 code", "default": "" },
-    { "type": "number", "id": "box4_L_mm", "label": "Box 4 inner length (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box4_W_mm", "label": "Box 4 inner width (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box4_H_mm", "label": "Box 4 inner height (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box4_max_weight_g", "label": "Box 4 max weight (g)", "default": 0, "min": 0 },
-
-    { "type": "checkbox", "id": "box5_enabled", "label": "Enable Box 5", "default": false },
-    { "type": "text", "id": "box5_name", "label": "Box 5 name", "default": "" },
-    { "type": "text", "id": "box5_code", "label": "Box 5 code", "default": "" },
-    { "type": "number", "id": "box5_L_mm", "label": "Box 5 inner length (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box5_W_mm", "label": "Box 5 inner width (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box5_H_mm", "label": "Box 5 inner height (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box5_max_weight_g", "label": "Box 5 max weight (g)", "default": 0, "min": 0 },
-
-    { "type": "checkbox", "id": "box6_enabled", "label": "Enable Box 6", "default": false },
-    { "type": "text", "id": "box6_name", "label": "Box 6 name", "default": "" },
-    { "type": "text", "id": "box6_code", "label": "Box 6 code", "default": "" },
-    { "type": "number", "id": "box6_L_mm", "label": "Box 6 inner length (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box6_W_mm", "label": "Box 6 inner width (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box6_H_mm", "label": "Box 6 inner height (mm)", "default": 0, "min": 0 },
-    { "type": "number", "id": "box6_max_weight_g", "label": "Box 6 max weight (g)", "default": 0, "min": 0 },
+    
 
     { "type": "header", "content": "Advanced (optional)" },
     {
