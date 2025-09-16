@@ -20,15 +20,15 @@ api_version = "2025-10"
   uri = "/webhooks/app/uninstalled"
 
   [[webhooks.subscriptions]]
-  uri = "https://boxmeter-production.up.railway.app/customers/data_request"
+  uri = "https://boxmeter-production.up.railway.app/webhooks/customers/data_request"
   compliance_topics = [ "customers/data_request"]
 
   [[webhooks.subscriptions]]
-  uri = "https://boxmeter-production.up.railway.app/customers/redact"
+  uri = "https://boxmeter-production.up.railway.app/webhooks/customers/redact"
   compliance_topics = [ "customers/redact"]
 
   [[webhooks.subscriptions]]
-  uri = "https://boxmeter-production.up.railway.app/shop/redact"
+  uri = "https://boxmeter-production.up.railway.app/webhooks/shop/redact"
   compliance_topics = [ "shop/redact"]
 
 [access_scopes]
