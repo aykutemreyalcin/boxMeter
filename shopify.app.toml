@@ -11,21 +11,31 @@ automatically_update_urls_on_dev = true
 [webhooks]
 api_version = "2025-10"
 
-[[webhooks.subscriptions]]
-topics = [ "app/uninstalled" ]
-uri = "/webhooks/app/uninstalled"
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
 
-[[webhooks.subscriptions]]
-compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
-uri = "https://app.example.com/webhooks"
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
 
-[[webhooks.subscriptions]]
-topics = [ "app/scopes_update" ]
-uri = "/webhooks/app/scopes_update"
+  [[webhooks.subscriptions]]
+  uri = "https://boxmeter-production.up.railway.app/customers/data_request"
+  compliance_topics = [ "customers/data_request"]
+
+  [[webhooks.subscriptions]]
+  uri = "https://boxmeter-production.up.railway.app/customers/redact"
+  compliance_topics = [ "customers/redact"]
+
+  [[webhooks.subscriptions]]
+  uri = "https://boxmeter-production.up.railway.app/shop/redact"
+  compliance_topics = [ "shop/redact"]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "write_products"
+optional_scopes = [ ]
+use_legacy_install_flow = false
 
 [auth]
 redirect_urls = [ "https://boxmeter-production.up.railway.app/auth/callback" ]
