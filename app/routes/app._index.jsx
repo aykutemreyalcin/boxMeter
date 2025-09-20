@@ -34,8 +34,7 @@ export default function Index() {
                   <Text variant="bodyMd" as="p">
                     Use the Theme setup page to open the Theme Editor on a
                     product template and add the Box Meter section to your
-                    theme. This app does not create products or modify your
-                    catalog.
+                    theme.
                   </Text>
                 </BlockStack>
                 <BlockStack gap="200">
@@ -52,6 +51,52 @@ export default function Index() {
                     Open Theme setup
                   </Link>
                 </InlineStack>
+              </BlockStack>
+            </Card>
+            <Card>
+              <BlockStack gap="300">
+                <Text as="h2" variant="headingMd">Product metafields</Text>
+                <Text as="p" variant="bodyMd">
+                  Box Meter reads package dimensions and weight from Product or
+                  Variant metafields. Create and populate the following
+                  definitions (units in millimeters and grams):
+                </Text>
+                <List>
+                  <List.Item>
+                    <code>packaging.length_mm</code> — Number (integer), length in mm
+                  </List.Item>
+                  <List.Item>
+                    <code>packaging.width_mm</code> — Number (integer), width in mm
+                  </List.Item>
+                  <List.Item>
+                    <code>packaging.height_mm</code> — Number (integer), height in mm
+                  </List.Item>
+                  <List.Item>
+                    <code>packaging.weight_g</code> — Number (integer), weight in grams
+                  </List.Item>
+                </List>
+                <Text as="p" variant="bodyMd">
+                  Where to add: Admin → Settings → Custom data → Products →
+                  Add definition (repeat under Variants if you need
+                  variant‑specific values). Then open a product (or variant) and
+                  fill the values in the Metafields section.
+                </Text>
+                <Text as="p" variant="bodyMd">
+                  Precedence: In the app block settings you can choose
+                  “Prefer product metafields over variant”. When enabled, Box
+                  Meter will use product metafields when available, otherwise it
+                  falls back to variant; when disabled, the order is reversed.
+                </Text>
+                <Text as="p" variant="bodySm">
+                  Learn more about metafield types: {" "}
+                  <Link
+                    url="https://shopify.dev/docs/apps/custom-data/metafields/types"
+                    target="_blank"
+                    removeUnderline
+                  >
+                    Shopify docs
+                  </Link>
+                </Text>
               </BlockStack>
             </Card>
           </Layout.Section>
