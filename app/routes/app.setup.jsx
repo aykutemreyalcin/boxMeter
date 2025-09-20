@@ -48,8 +48,9 @@ export default function ThemeSetup() {
               </Text>
               <Text as="p" variant="bodyMd">
                 Use the control below to open the Theme Editor on a specific product
-                page. From there, click “Add block” in a product section, search for
-                “Box Meter”, and add it manually, then save.
+                page. In the left sidebar, click “Add section”, switch to the
+                “Apps” tab, search/select “Box Meter”, add it to the page, then
+                click Save.
               </Text>
               <InlineStack gap="300">
                 <TextField
@@ -80,9 +81,8 @@ export default function ThemeSetup() {
                   product will be previewed; otherwise Shopify chooses one.
                 </List.Item>
                 <List.Item>
-                In the left sidebar, click “Add block” in the section where you
-                want it (for example, a product section), search for “Box Meter”,
-                select it and confirm to add.
+                In the left sidebar, click “Add section”, go to the “Apps” tab,
+                search/select “Box Meter”, and confirm to add it to the page.
                 </List.Item>
                 <List.Item>
                   Configure settings (boxes, rotation, product or variant
