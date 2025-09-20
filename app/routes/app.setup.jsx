@@ -57,7 +57,7 @@ export default function ThemeSetup() {
                   label="Product handle (optional)"
                   value={productHandle}
                   onChange={setProductHandle}
-                  placeholder="e.g. my-awesome-product"
+                  placeholder="e.g. my-product"
                   autoComplete="off"
                 />
               </InlineStack>
