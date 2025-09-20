@@ -19,21 +19,8 @@ export const loader = async ({ request }) => {
   return null;
 };
 
-// Theme App Extension constants
-// If you change the theme extension, update the UID below.
-const THEME_EXTENSION_UID = "840edf4f-c833-6545-9e53-823af116f0caac300943";
-
-// Deep links (use the shopify: protocol to open inside Admin)
-// Note: Avoid using context=apps because it lands on App embeds.
+// Theme Editor deep link base (no context=apps to avoid App embeds)
 const DEEP_LINK_BASE = "shopify:admin/themes/current/editor";
-
-function buildBlockDeepLink({ blockHandle, template, previewPath }) {
-  const params = new URLSearchParams();
-  if (template) params.set("template", template);
-  if (previewPath) params.set("previewPath", previewPath);
-  params.set("addAppBlockId", `${THEME_EXTENSION_UID}/${blockHandle}`);
-  return `shopify:admin/themes/current/editor?${params.toString()}`;
-}
 
 export default function ThemeSetup() {
   const [productHandle, setProductHandle] = useState("");
@@ -42,14 +29,12 @@ export default function ThemeSetup() {
     [productHandle],
   );
 
-  const addBoxMeterOnProduct = useMemo(
-    () => buildBlockDeepLink({ blockHandle: "box_meter", template: "product", previewPath: productPreviewPath }),
-    [productPreviewPath],
-  );
-  const addStarRatingOnProduct = useMemo(
-    () => buildBlockDeepLink({ blockHandle: "star_rating", template: "product", previewPath: productPreviewPath }),
-    [productPreviewPath],
-  );
+  const openProductEditor = useMemo(() => {
+    const params = new URLSearchParams();
+    params.set("template", "product");
+    if (productPreviewPath) params.set("previewPath", productPreviewPath);
+    return `${DEEP_LINK_BASE}?${params.toString()}`;
+  }, [productPreviewPath]);
 
   return (
     <Page>
@@ -62,10 +47,9 @@ export default function ThemeSetup() {
                 Add Box Meter to your theme
               </Text>
               <Text as="p" variant="bodyMd">
-                Use the controls below to deep link into the Theme Editor on a
-                specific product page (recommended), with the correct app block
-                preselected. Then add the block to the section you want and
-                save.
+                Use the control below to open the Theme Editor on a specific product
+                page. From there, click “Add block” in a product section, search for
+                “Box Meter”, and add it manually, then save.
               </Text>
               <InlineStack gap="300">
                 <TextField
@@ -77,11 +61,8 @@ export default function ThemeSetup() {
                 />
               </InlineStack>
               <InlineStack gap="300">
-                <Button url={addBoxMeterOnProduct} target="_blank" variant="primary">
-                  Open Product Editor — Box Meter
-                </Button>
-                <Button url={addStarRatingOnProduct} target="_blank" variant="secondary">
-                  Open Product Editor — Star Rating
+                <Button url={openProductEditor} target="_blank" variant="primary">
+                  Open Product Editor
                 </Button>
               </InlineStack>
             </BlockStack>
@@ -99,9 +80,9 @@ export default function ThemeSetup() {
                   product will be previewed; otherwise Shopify chooses one.
                 </List.Item>
                 <List.Item>
-                  In the left sidebar, click “Add block” in the section where
-                  you want it (for example, a product section) — the app block
-                  will be preselected. Confirm to add it.
+                In the left sidebar, click “Add block” in the section where you
+                want it (for example, a product section), search for “Box Meter”,
+                select it and confirm to add.
                 </List.Item>
                 <List.Item>
                   Configure settings (boxes, rotation, product or variant
