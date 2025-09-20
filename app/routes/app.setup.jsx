@@ -20,24 +20,14 @@ export const loader = async ({ request }) => {
 };
 
 // Theme App Extension constants
-// If you change the theme extension, update these identifiers below.
-// Prefer the extension HANDLE for deep links; it's stable across pushes.
-const THEME_EXTENSION_HANDLE = "boxmeterextension"; // from dev bundle manifest
-const THEME_EXTENSION_UID = "840edf4f-c833-6545-9e53-823af116f0caac300943"; // fallback
+// If you change the theme extension, update the UID below.
+const THEME_EXTENSION_UID = "840edf4f-c833-6545-9e53-823af116f0caac300943";
 
 // Deep links (use the shopify: protocol to open inside Admin)
 // Note: Avoid using context=apps because it lands on App embeds.
 const DEEP_LINK_BASE = "shopify:admin/themes/current/editor";
 
-function buildBlockDeepLinkWithHandle({ blockHandle, template, previewPath }) {
-  const params = new URLSearchParams();
-  if (template) params.set("template", template);
-  if (previewPath) params.set("previewPath", previewPath);
-  params.set("addAppBlockId", `${THEME_EXTENSION_HANDLE}/${blockHandle}`);
-  return `shopify:admin/themes/current/editor?${params.toString()}`;
-}
-
-function buildBlockDeepLinkWithUid({ blockHandle, template, previewPath }) {
+function buildBlockDeepLink({ blockHandle, template, previewPath }) {
   const params = new URLSearchParams();
   if (template) params.set("template", template);
   if (previewPath) params.set("previewPath", previewPath);
@@ -53,19 +43,11 @@ export default function ThemeSetup() {
   );
 
   const addBoxMeterOnProduct = useMemo(
-    () => buildBlockDeepLinkWithHandle({ blockHandle: "box_meter", template: "product", previewPath: productPreviewPath }),
-    [productPreviewPath],
-  );
-  const addBoxMeterOnProductFallback = useMemo(
-    () => buildBlockDeepLinkWithUid({ blockHandle: "box_meter", template: "product", previewPath: productPreviewPath }),
+    () => buildBlockDeepLink({ blockHandle: "box_meter", template: "product", previewPath: productPreviewPath }),
     [productPreviewPath],
   );
   const addStarRatingOnProduct = useMemo(
-    () => buildBlockDeepLinkWithHandle({ blockHandle: "star_rating", template: "product", previewPath: productPreviewPath }),
-    [productPreviewPath],
-  );
-  const addStarRatingOnProductFallback = useMemo(
-    () => buildBlockDeepLinkWithUid({ blockHandle: "star_rating", template: "product", previewPath: productPreviewPath }),
+    () => buildBlockDeepLink({ blockHandle: "star_rating", template: "product", previewPath: productPreviewPath }),
     [productPreviewPath],
   );
 
@@ -102,13 +84,6 @@ export default function ThemeSetup() {
                   Open Product Editor — Star Rating
                 </Button>
               </InlineStack>
-              <Text as="p" variant="bodySm">
-                Eğer “not added / problem with the app block” uyarısı görürseniz
-                bu <Link url={addBoxMeterOnProductFallback} target="_blank">Box Meter (fallback)</Link>{" "}
-                veya {" "}
-                <Link url={addStarRatingOnProductFallback} target="_blank">Star Rating (fallback)</Link>{" "}
-                linklerini deneyin.
-              </Text>
             </BlockStack>
           </Card>
         </Layout.Section>
