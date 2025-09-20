@@ -24,11 +24,11 @@ export const loader = async ({ request }) => {
 const THEME_EXTENSION_UID = "840edf4f-c833-6545-9e53-823af116f0caac300943";
 
 // Deep links (use the shopify: protocol to open inside Admin)
-const DEEP_LINK_BASE = "shopify:admin/themes/current/editor?context=apps";
+// Note: Avoid using context=apps because it lands on App embeds.
+const DEEP_LINK_BASE = "shopify:admin/themes/current/editor";
 
 function buildBlockDeepLink({ blockHandle, template, previewPath }) {
   const params = new URLSearchParams();
-  params.set("context", "apps");
   if (template) params.set("template", template);
   if (previewPath) params.set("previewPath", previewPath);
   params.set("addAppBlockId", `${THEME_EXTENSION_UID}/${blockHandle}`);
@@ -116,7 +116,7 @@ export default function ThemeSetup() {
                 Admin and navigate to Online Store → Themes → Customize. To
                 force the product template view, use this generic link: {" "}
                 <Link
-                  url={`${DEEP_LINK_BASE}&template=product`}
+                  url={`${DEEP_LINK_BASE}?template=product`}
                   target="_blank"
                   removeUnderline
                 >
@@ -125,7 +125,7 @@ export default function ThemeSetup() {
                 {productHandle ? (
                   <> — or for this product:{" "}
                     <Link
-                      url={`${DEEP_LINK_BASE}&template=product&previewPath=/products/${productHandle}`}
+                      url={`${DEEP_LINK_BASE}?template=product&previewPath=/products/${productHandle}`}
                       target="_blank"
                       removeUnderline
                     >
