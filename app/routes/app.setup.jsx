@@ -8,9 +8,11 @@ import {
   BlockStack,
   InlineStack,
   Link,
+  TextField,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
+import { useState, useMemo } from "react";
 
 export const loader = async ({ request }) => {
   await authenticate.admin(request);
@@ -23,10 +25,32 @@ const THEME_EXTENSION_UID = "840edf4f-c833-6545-9e53-823af116f0caac300943";
 
 // Deep links (use the shopify: protocol to open inside Admin)
 const DEEP_LINK_BASE = "shopify:admin/themes/current/editor?context=apps";
-const ADD_BOX_METER = `${DEEP_LINK_BASE}&addAppBlockId=${THEME_EXTENSION_UID}/box_meter`;
-const ADD_STAR_RATING = `${DEEP_LINK_BASE}&addAppBlockId=${THEME_EXTENSION_UID}/star_rating`;
+
+function buildBlockDeepLink({ blockHandle, template, previewPath }) {
+  const params = new URLSearchParams();
+  params.set("context", "apps");
+  if (template) params.set("template", template);
+  if (previewPath) params.set("previewPath", previewPath);
+  params.set("addAppBlockId", `${THEME_EXTENSION_UID}/${blockHandle}`);
+  return `shopify:admin/themes/current/editor?${params.toString()}`;
+}
 
 export default function ThemeSetup() {
+  const [productHandle, setProductHandle] = useState("");
+  const productPreviewPath = useMemo(
+    () => (productHandle ? `/products/${productHandle}` : undefined),
+    [productHandle],
+  );
+
+  const addBoxMeterOnProduct = useMemo(
+    () => buildBlockDeepLink({ blockHandle: "box_meter", template: "product", previewPath: productPreviewPath }),
+    [productPreviewPath],
+  );
+  const addStarRatingOnProduct = useMemo(
+    () => buildBlockDeepLink({ blockHandle: "star_rating", template: "product", previewPath: productPreviewPath }),
+    [productPreviewPath],
+  );
+
   return (
     <Page>
       <TitleBar title="Theme setup" />
@@ -38,16 +62,26 @@ export default function ThemeSetup() {
                 Add Box Meter to your theme
               </Text>
               <Text as="p" variant="bodyMd">
-                Use the buttons below to deep link into the Theme Editor with
-                the correct app block preselected. Then add the block to the
-                section you want and save.
+                Use the controls below to deep link into the Theme Editor on a
+                specific product page (recommended), with the correct app block
+                preselected. Then add the block to the section you want and
+                save.
               </Text>
               <InlineStack gap="300">
-                <Button url={ADD_BOX_METER} target="_blank" variant="primary">
-                  Open Theme Editor — Box Meter
+                <TextField
+                  label="Product handle (optional)"
+                  value={productHandle}
+                  onChange={setProductHandle}
+                  placeholder="e.g. my-awesome-product"
+                  autoComplete="off"
+                />
+              </InlineStack>
+              <InlineStack gap="300">
+                <Button url={addBoxMeterOnProduct} target="_blank" variant="primary">
+                  Open Product Editor — Box Meter
                 </Button>
-                <Button url={ADD_STAR_RATING} target="_blank" variant="secondary">
-                  Open Theme Editor — Star Rating
+                <Button url={addStarRatingOnProduct} target="_blank" variant="secondary">
+                  Open Product Editor — Star Rating
                 </Button>
               </InlineStack>
             </BlockStack>
@@ -60,7 +94,9 @@ export default function ThemeSetup() {
               <Text as="h2" variant="headingMd">Instructions</Text>
               <List>
                 <List.Item>
-                  Click one of the deep links above to open the Theme Editor.
+                  Click one of the deep links above to open the Theme Editor on
+                  a product page. If you enter a product handle, that specific
+                  product will be previewed; otherwise Shopify chooses one.
                 </List.Item>
                 <List.Item>
                   In the left sidebar, click “Add block” in the section where
@@ -77,12 +113,26 @@ export default function ThemeSetup() {
               </List>
               <Text as="p" variant="bodyMd">
                 If a deep link doesn’t open, you can also open the editor from
-                Admin and navigate to Online Store → Themes → Customize, or use
-                this generic link: {" "}
-                <Link url={DEEP_LINK_BASE} target="_blank" removeUnderline>
-                  open Theme Editor
+                Admin and navigate to Online Store → Themes → Customize. To
+                force the product template view, use this generic link: {" "}
+                <Link
+                  url={`${DEEP_LINK_BASE}&template=product`}
+                  target="_blank"
+                  removeUnderline
+                >
+                  open Product template in Theme Editor
                 </Link>
-                .
+                {productHandle ? (
+                  <> — or for this product:{" "}
+                    <Link
+                      url={`${DEEP_LINK_BASE}&template=product&previewPath=/products/${productHandle}`}
+                      target="_blank"
+                      removeUnderline
+                    >
+                      open specific product
+                    </Link>
+                  </>
+                ) : null}
               </Text>
             </BlockStack>
           </Card>
@@ -91,4 +141,3 @@ export default function ThemeSetup() {
     </Page>
   );
 }
-
